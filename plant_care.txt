@@ -1,0 +1,48 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x20, 16, 2);
+
+int soilpin = A0;
+int temppin = A1;
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soilval = analogRead(soilpin);
+  int tempval = analogRead(temppin);
+
+  float soilmoisture = (100./876.) * soilval;
+  float voltage = (5.0 / 1024.0) * tempval;
+  float temperature = (voltage - 0.5) * 100.;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Soil: ");
+  lcd.print(soilmoisture); 
+  lcd.print("%");
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(temperature);
+  lcd.print("C");
+
+  Serial.print("Soil: ");
+  Serial.print(soilmoisture);
+  Serial.print("% Temp: ");
+  Serial.print(temperature);
+  Serial.println("C");
+
+  delay(1000);
+  
+  if (soilmoisture < 30 || temperature > 30){
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Water");
+    lcd.setCursor(0, 1);
+    lcd.print(" me!");
+    delay(1000);
+  } 
+}

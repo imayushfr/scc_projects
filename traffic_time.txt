@@ -1,0 +1,58 @@
+int lightpin = A0;
+int irpin1 = 1;
+int irpin2 = 8;
+int redpin = 2;
+int yellowpin = 4;
+int greenpin = 7;
+
+void setup()
+{
+  pinMode(lightpin, INPUT);
+  pinMode(irpin1, INPUT);
+  pinMode(irpin2, INPUT);
+  pinMode(redpin, OUTPUT);
+  pinMode(yellowpin, OUTPUT);
+  pinMode(greenpin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int detected1 = digitalRead(irpin1);
+  int detected2 = digitalRead(irpin2);                         
+  int light_intensity = analogRead(lightpin);
+  
+  int vehicles = detected1 + detected2;
+  
+  Serial.print("Light intensity: ");
+  Serial.print(light_intensity);
+  Serial.print(", Vehicles: ");
+  Serial.println(vehicles);
+
+  int redtime = 2000;
+  
+  if (light_intensity < 300){
+    redtime = redtime + 3000;
+  }
+  if (vehicles == 1){
+    redtime = redtime + 1000;
+  }
+  else if (vehicles == 2){
+    redtime = redtime + 2000;
+  }
+  
+  Serial.print("Red time: ");
+  Serial.println(redtime);
+  
+  digitalWrite(redpin, HIGH);
+  delay(redtime);
+  digitalWrite(redpin, LOW);
+                              
+  digitalWrite(yellowpin, HIGH);
+  delay(1000);
+  digitalWrite(yellowpin, LOW);
+  
+  digitalWrite(greenpin, HIGH);
+  delay(3000);
+  digitalWrite(greenpin, LOW);
+}

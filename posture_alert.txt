@@ -1,0 +1,26 @@
+int forcepin = A0;   
+int tiltpin = 2;    
+int buzzerpin = 4;          
+
+void setup() {
+  pinMode(tiltpin, INPUT); 
+  pinMode(buzzerpin, OUTPUT);
+  Serial.begin(9600);   
+}
+
+void loop() {
+  int forceval = analogRead(forcepin);
+  int tilt = digitalRead(tiltpin);
+  
+  Serial.print("Force: ");
+  Serial.print(forceval);
+  Serial.print(", Tilt: ");
+  Serial.println(tilt);
+
+  if (forceval > 1013 && tilt == HIGH) { 
+    digitalWrite(buzzerpin, HIGH);
+  } else {
+    digitalWrite(buzzerpin, LOW);
+  }
+  delay(1000);
+}

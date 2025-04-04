@@ -1,0 +1,46 @@
+#include <Servo.h>
+
+int pirpin = 4;
+int ledpin = 2;
+int servopin = 3;
+int tempin = A0;
+
+Servo myservo;
+
+void setup()
+{
+  pinMode(pirpin, INPUT);
+  pinMode(ledpin, OUTPUT);
+  Serial.begin(9600);
+  myservo.attach(servopin);
+  myservo.write(0);
+}
+
+void loop()
+{
+  int motion = digitalRead(pirpin);
+  
+  int tempval = analogRead(tempin);
+  float voltage = (5./1024.) * tempval;
+  float temp = (voltage - 0.5) * 100;
+  
+  if (motion == 1){
+    digitalWrite(ledpin, HIGH);
+    Serial.println("Motion detected!");
+  }
+  else{
+    digitalWrite(ledpin, LOW);
+    Serial.println("No movement.");
+  }
+  
+  if (temp > 28.){
+    myservo.write(90);
+    Serial.println("Window opened");
+  }
+  else{
+    myservo.write(0);
+    Serial.println("Window closed");
+  }     
+                  
+  delay(1000);
+}
